@@ -1,0 +1,6 @@
+import setuptools
+
+setuptools.setup(
+  name = "tef",
+  version=${PACKAGE_VERSION},
+  packages=setuptools.find_packages())
