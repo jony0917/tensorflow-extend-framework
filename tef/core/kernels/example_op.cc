@@ -52,6 +52,7 @@ public:
 REGISTER_CPU(float);
 REGISTER_CPU(int32);
 
+
 // Register the GPU kernels.
 #ifdef GOOGLE_CUDA
 #define REGISTER_GPU(T)                                          \
