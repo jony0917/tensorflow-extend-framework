@@ -7,8 +7,7 @@ set(OUTPUT      "${CMAKE_CURRENT_SOURCE_DIR}/timestamp")
 configure_file(${SETUP_PY_IN} ${SETUP_PY})
 
 add_custom_command(OUTPUT  ${OUTPUT}
-                   COMMAND ${PYTHON} ${SETUP_PY} build
-                   COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT}
+                   COMMAND ${PYTHON} ${SETUP_PY} bdist_wheel
                    COMMENT "building tef package")
 
 add_custom_target(tef ALL DEPENDS ${OUTPUT})
