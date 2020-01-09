@@ -2,5 +2,6 @@ import setuptools
 
 setuptools.setup(
   name = "tef",
-  version=${PACKAGE_VERSION},
-  packages=setuptools.find_packages())
+  version = '${PACKAGE_VERSION}',
+  package_dir = {'':'${CMAKE_CURRENT_SOURCE_DIR}'},
+  packages = setuptools.find_packages('${CMAKE_CURRENT_SOURCE_DIR}'))
