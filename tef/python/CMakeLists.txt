@@ -1,7 +1,8 @@
 find_program(PYTHON "python")
 
-set(SETUP_PY_IN "")
-set(SETUP_PY    "")
+set(SETUP_PY_IN "${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in")
+set(SETUP_PY    "${CMAKE_CURRENT_SOURCE_DIR}/setup.py")
+set(OUTPUT      "${CMAKE_CURRENT_SOURCE_DIR}/build")
 
 configure_file(${SETUP_PY_IN} ${SETUP_PY})
 
