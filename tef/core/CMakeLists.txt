@@ -1,7 +1,6 @@
 project(tef)
 cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
 
-
 execute_process(COMMAND python -c "import tensorflow as tf; print(\" \".join(tf.sysconfig.get_compile_flags()))" OUTPUT_VARIABLE TENSORFLOW_CFLAGS)
 string(REGEX REPLACE "\n$" "" TENSORFLOW_CFLAGS ${TENSORFLOW_CFLAGS})
 message(STATUS "TENSORFLOW_CFLAGS=${TENSORFLOW_CFLAGS}")
@@ -21,4 +20,7 @@ set(SOURCE_FILES
 
 add_library(tef_core SHARED ${SOURCE_FILES})
 target_link_libraries(tef_core ${TENSORFLOW_LFLAGS})
-
+add_custom_command(TARGET tef_core
+                   POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:tef_core>  "${CMAKE_CURRENT_SOURCE_DIR}/../python/tef/pywrap/"
+                   COMMENT "coping output of tef_core task")
