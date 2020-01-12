@@ -1,5 +1,5 @@
 
-#include "kernel_example.h"
+#include "example_op.h"
 #include "tensorflow/core/framework/op_kernel.h"
 
 using namespace tensorflow;
@@ -63,8 +63,6 @@ REGISTER_CPU(int32);
       ExampleOp<GPUDevice, T>);
 REGISTER_GPU(float);
 REGISTER_GPU(int32);
-#endif
-
-
+#endif //GOOGLE_CUDA
 
 

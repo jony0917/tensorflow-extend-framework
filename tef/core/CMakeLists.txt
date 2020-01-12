@@ -12,6 +12,11 @@ string(REGEX REPLACE "\n$" "" TENSORFLOW_LFLAGS ${TENSORFLOW_LFLAGS})
 message(STATUS "TENSORFLOW_LFLAGS=${TENSORFLOW_LFLAGS}")
 
 
+find_package(CUDA)
+set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-gencode arch=compute_20,code=sm_20)
+cuda_compile(EXAMPLE_OP_O "kernels/example_op.cu.cc")
+
+
 set(SOURCE_FILES
     "ops/example_ops.cc"
     "kernels/zero_out_op.h"
@@ -19,7 +24,7 @@ set(SOURCE_FILES
 
 
 add_library(tef_core SHARED ${SOURCE_FILES})
-target_link_libraries(tef_core ${TENSORFLOW_LFLAGS})
+target_link_libraries(tef_core ${TENSORFLOW_LFLAGS} EXAMPLE_OP_O)
 add_custom_command(TARGET tef_core
                    POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:tef_core>  "${CMAKE_CURRENT_SOURCE_DIR}/../python/tef/pywrap/"

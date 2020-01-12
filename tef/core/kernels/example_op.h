@@ -12,11 +12,11 @@ struct ExampleFunctor{
 
 #if GOOGLE_CUDA
 //Partially specialize functor for GpuDevice
-template<typename Eigen::GpuDevice, typename T>
-struct ExampleFunctor{
-  void operator()(const Eigen::GpuDevice& d, int size, const T* in, t* out);
+template<typename T>
+struct ExampleFunctor<Eigen::GpuDevice, T>{
+  void operator()(const Eigen::GpuDevice& d, int size, const T* in, T* out);
 };
 
-#endif
+#endif //GOOGLE_CUDA
 
 #endif //KERNEL_EXAMPLE_H_
