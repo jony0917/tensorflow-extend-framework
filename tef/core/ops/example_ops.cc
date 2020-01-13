@@ -15,8 +15,9 @@ REGISTER_OP("ZeroOut")
     });
 
 REGISTER_OP("Example")
-    .Input("to_zero: int32")
-    .Output("zeroed: int32")
+    .Input("multiply_by_two: T")
+    .Output("output: T")
+    .Attr("T: {int32, float}")
     .SetShapeFn([](::tensorflow::shape_inference::InferenceContext* c) {
       c->set_output(0, c->input(0));
       return Status::OK();

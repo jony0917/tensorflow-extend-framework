@@ -1,11 +1,12 @@
 
-#include "example_op.h"
+
 #include "tensorflow/core/framework/op_kernel.h"
+#include "example_op.h"
 
 using namespace tensorflow;
 
 using CPUDevice = Eigen::ThreadPoolDevice;
-using GPUDevice = Eigen::GPUDevice;
+using GPUDevice = Eigen::GpuDevice;
 
 template<typename T>
 struct ExampleFunctor<CPUDevice, T> {
@@ -19,7 +20,7 @@ struct ExampleFunctor<CPUDevice, T> {
 // OpKernel definition.
 // template parameter <T> is the datatype of the tensors
 template<typename Device, typename T>
-class ExampleOp : OpKernel {
+class ExampleOp : public OpKernel {
 public:
   explicit ExampleOp(OpKernelConstruction* context) : OpKernel(context) {}
 
@@ -57,7 +58,7 @@ REGISTER_CPU(int32);
 #ifdef GOOGLE_CUDA
 #define REGISTER_GPU(T)                                          \
   /* Declare explicit instantiations in kernel_example.cu.cc. */ \
-  extern template ExampleFunctor<GPUDevice, T>;                  \
+  //extern template ExampleFunctor<GPUDevice, T>;                  \
   REGISTER_KERNEL_BUILDER(                                       \
       Name("Example").Device(DEVICE_GPU).TypeConstraint<T>("T"), \
       ExampleOp<GPUDevice, T>);
