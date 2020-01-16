@@ -55,15 +55,13 @@ REGISTER_CPU(int32);
 
 
 // Register the GPU kernels.
-#ifdef GOOGLE_CUDA
+//#ifdef GOOGLE_CUDA
 #define REGISTER_GPU(T)                                          \
-  /* Declare explicit instantiations in kernel_example.cu.cc. */ \
-  //extern template ExampleFunctor<GPUDevice, T>;                  \
   REGISTER_KERNEL_BUILDER(                                       \
       Name("Example").Device(DEVICE_GPU).TypeConstraint<T>("T"), \
       ExampleOp<GPUDevice, T>);
 REGISTER_GPU(float);
 REGISTER_GPU(int32);
-#endif //GOOGLE_CUDA
+//#endif //GOOGLE_CUDA
 
 
