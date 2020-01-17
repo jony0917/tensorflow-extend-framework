@@ -15,6 +15,7 @@ __global__ void ExampleCudaKernel(const int size, const T* in, T* out) {
   for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < size; i += blockDim.x * gridDim.x) {
     out[i] = 2 * ldg(in + i);
   }
+
 }
 
 // Define the GPU implementation that launches the CUDA kernel.
@@ -33,4 +34,5 @@ template struct ExampleFunctor<GPUDevice, float>;
 template struct ExampleFunctor<GPUDevice, int32>;
 
 #endif //GOOGLE_CUDA
+
 
