@@ -4,3 +4,5 @@
 
 using namespace tensorflow;
 
+REGISTER_OP("DensePull")
+    .Input()
