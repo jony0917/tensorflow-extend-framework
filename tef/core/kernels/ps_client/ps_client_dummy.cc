@@ -11,7 +11,7 @@ void SGDUpdate(float alpha, const Tensor& gradient, Tensor * target){
   CHECK(gradient.NumElements() == target->NumElements());
 
   auto target_vec = target->flat<T>();
-  auto gradient_vec = gradient.flat<T>();
+  auto gradient_vec = gradient.flat<float>();
   for(int i = 0; i < target->NumElements(); i++){
     target_vec(i) -= alpha * gradient_vec(i);
   }
