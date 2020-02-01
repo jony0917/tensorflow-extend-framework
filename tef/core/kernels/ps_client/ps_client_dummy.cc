@@ -2,7 +2,7 @@
 
 #include "ps_client_dummy.h"
 
-std::mutex DynamicFeatureServiceImpl::s_instance_mutex_;
+std::mutex PsClientDummy::s_instance_mutex_;
 
 //static
 PsClientDummy * PsClientDummy::GetInstance(){
@@ -42,7 +42,7 @@ void PsClientDummy::SparsePull(int id,
 
 void PsClientDummy::SparsePush(int id,
                 const Tensor& index,
-                const Tensor& data
+                const Tensor& data,
                 const std::string& updater) {
 }
 

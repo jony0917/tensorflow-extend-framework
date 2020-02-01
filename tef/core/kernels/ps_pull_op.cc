@@ -12,7 +12,7 @@ public:
 
    ps_client_ = PsClientFactory::Build();
    PsClient::VariableInfo var_info;
-   var_info.var_name_ = var_name;
+   var_info.var_name_ = var_name_;
    var_info.shape_ = shape_;
    var_info.dtype_ = dtype_;
    var_info.var_type_ = PsClient::VT_DENSE;
@@ -24,7 +24,7 @@ public:
  void Compute(OpKernelContext* context) override {
    Tensor* output_tensor = nullptr;
    OP_REQUIRES_OK(context, context->allocate_output(0, shape_, &output_tensor));
-   ps_client_->DensePull(var_name_, output_tensor);
+   ps_client_->DensePull(var_id_, output_tensor);
  }
 
 private:

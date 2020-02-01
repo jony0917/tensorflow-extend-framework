@@ -7,7 +7,7 @@
 #include "ps_client.h"
 
 
-class PsClientDummy : PsClient {
+class PsClientDummy : public PsClient {
 public:
   static PsClientDummy * GetInstance();
 
@@ -28,7 +28,7 @@ public:
 
   virtual void SparsePush(int id,
                           const Tensor& index,
-                          const Tensor& data
+                          const Tensor& data,
                           const std::string& updater) override;
 
   virtual void HashPull(int id,
