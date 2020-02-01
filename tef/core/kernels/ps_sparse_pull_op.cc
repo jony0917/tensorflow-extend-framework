@@ -1,5 +1,5 @@
 
-#include "ps_sparse_pull.h"
+#include "ps_sparse_pull_op.h"
 
 class PsSparsePullOp : public OpKernel {
 public:
@@ -21,10 +21,8 @@ public:
 public:
  void Compute(OpKernelContext* context) override {
    const Tensor &index = context->input(0);
-
    Tensor* output_tensor = nullptr;
    OP_REQUIRES_OK(context, context->allocate_output(0, shape_, &output_tensor));
-
    ps_client_->SparsePull(var_id_, index, output_tensor);
  }
 
@@ -32,13 +30,14 @@ private:
   TensorShape shape_;
   DataType dtype_;
   string var_name_;
+
   int var_id_;
   PsClient * ps_client_;
 };
 
 
 #define REGISTER_CPU_KERNEL(T) \
-   REGISTER_KERNEL_BUILDER(Name("PsPull").Device(DEVICE_CPU).TypeConstraint<T>("dtype"), PsSparsePullOp);
+   REGISTER_KERNEL_BUILDER(Name("PsSparsePull").Device(DEVICE_CPU).TypeConstraint<T>("dtype"), PsSparsePullOp);
 REGISTER_CPU_KERNEL(bool)
 REGISTER_CPU_KERNEL(int)
 REGISTER_CPU_KERNEL(int64)

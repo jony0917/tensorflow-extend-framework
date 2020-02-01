@@ -5,8 +5,9 @@ class PsPushOp : public OpKernel {
 public:
  explicit PsPushOp(OpKernelConstruction* context) : OpKernel(context){
    OP_REQUIRES_OK(context, context->GetAttr("var_name", &var_name_));
-   OP_REQUIRES_OK(context, context->GetAttr("updater", &updater_));
+   OP_REQUIRES_OK(context, context->GetAttr("shape", &shape_));
    OP_REQUIRES_OK(context, context->GetAttr("dtype", &dtype_));
+   OP_REQUIRES_OK(context, context->GetAttr("updater", &updater_));
 
    ps_client_ = PsClientFactory::Build();
    PsClient::VariableInfo var_info;
@@ -24,11 +25,13 @@ public:
    ps_client_->DensePush(var_id, data, updater_);
  }
 
+
 private:
   TensorShape shape_;
   DataType dtype_;
   string var_name_;
   string updater_;
+
   int var_id_;
   PsClient * ps_client_;
 };

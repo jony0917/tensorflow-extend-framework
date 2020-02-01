@@ -38,7 +38,24 @@ set(SOURCE_FILES
     "kernels/zero_out_op.h"
     "kernels/zero_out_op.cc"
     "kernels/example_op.h"
-    "kernels/example_op.cc")
+    "kernels/example_op.cc"
+    "kernels/ps_hash_pull_op.h"
+    "kernels/ps_hash_pull_op.cc"
+    "kernels/ps_hash_push_op.h"
+    "kernels/ps_hash_push_op.cc"
+    "kernels/ps_pull_op.h"
+    "kernels/ps_pull_op.cc"
+    "kernels/ps_push_op.h"
+    "kernels/ps_push_op.cc"
+    "kernels/ps_sparse_pull_op.h"
+    "kernels/ps_sparse_pull_op.cc"
+    "kernels/ps_sparse_push_op.h"
+    "kernels/ps_sparse_push_op.cc"
+    "kernels/ps_client/ps_client.h"
+    "kernels/ps_client/ps_client_dummy.h"
+    "kernels/ps_client/ps_client_dummy.cc"
+    "kernels/ps_client/ps_client_factory.h"
+    "kernels/ps_client/ps_client_factory.cc")
 
 add_library(tef_core SHARED ${SOURCE_FILES} ${cuda_op_objects})
 target_link_libraries(tef_core ${TENSORFLOW_LFLAGS})

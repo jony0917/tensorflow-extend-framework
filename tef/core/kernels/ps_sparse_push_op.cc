@@ -1,6 +1,6 @@
 
 
-#include "ps_sparse_push.h"
+#include "ps_sparse_push_op.h"
 
 class PsSparsePushOp : public OpKernel {
 public:
@@ -30,16 +30,17 @@ public:
 private:
   TensorShape shape_;
   DataType dtype_;
-  string var_name_;
+  std::string var_name_;
+  std::string updater_;
+
   int var_id_;
   PsClient * ps_client_;
 };
 
 
 
-
 #define REGISTER_CPU_KERNEL(T) \
-   REGISTER_KERNEL_BUILDER(Name("PsPull").Device(DEVICE_CPU).TypeConstraint<T>("dtype"), PsSparsePushOp);
+   REGISTER_KERNEL_BUILDER(Name("PsSparsePush").Device(DEVICE_CPU).TypeConstraint<T>("dtype"), PsSparsePushOp);
 REGISTER_CPU_KERNEL(bool)
 REGISTER_CPU_KERNEL(int)
 REGISTER_CPU_KERNEL(int64)

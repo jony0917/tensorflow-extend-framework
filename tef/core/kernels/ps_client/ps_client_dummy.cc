@@ -18,6 +18,7 @@ PsClientDummy * PsClientDummy::GetInstance(){
 }
 
 void PsClientDummy::RegisterVariable(const VariableInfo& info, int &id) {
+
 }
 
 void PsClientDummy::GetVariableInfo(const string& var_name, VariableInfo * var_info) {
@@ -25,6 +26,7 @@ void PsClientDummy::GetVariableInfo(const string& var_name, VariableInfo * var_i
 }
 
 void PsClientDummy::DensePull(int id, Tensor* data) {
+
 }
 
 void PsClientDummy::DensePush(int id,
