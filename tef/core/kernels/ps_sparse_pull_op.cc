@@ -1,5 +1,6 @@
 
 #include "ps_sparse_pull_op.h"
+#include "ps_client/ps_client_factory.h"
 
 class PsSparsePullOp : public OpKernel {
 public:

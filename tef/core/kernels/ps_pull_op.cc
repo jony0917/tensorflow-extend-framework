@@ -1,5 +1,6 @@
 
 #include "ps_pull_op.h"
+#include "ps_client/ps_client_factory.h"
 
 
 class PsPullOp : public OpKernel {

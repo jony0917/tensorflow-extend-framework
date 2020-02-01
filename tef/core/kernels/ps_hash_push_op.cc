@@ -1,7 +1,7 @@
 
 
 #include "ps_hash_push_op.h"
-
+#include "ps_client/ps_client_factory.h"
 
 class PsHashPushOp : public OpKernel {
 public:

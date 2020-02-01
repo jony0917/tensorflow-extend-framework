@@ -1,4 +1,5 @@
 #include "ps_hash_pull_op.h"
+#include "ps_client/ps_client_factory.h"
 
 class PsHashPullOp : public OpKernel {
 public:

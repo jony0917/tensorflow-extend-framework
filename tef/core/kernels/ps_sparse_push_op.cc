@@ -1,6 +1,7 @@
 
 
 #include "ps_sparse_push_op.h"
+#include "ps_client/ps_client_factory.h"
 
 class PsSparsePushOp : public OpKernel {
 public:

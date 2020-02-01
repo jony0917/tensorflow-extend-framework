@@ -1,5 +1,6 @@
 
 #include "ps_push_op.h"
+#include "ps_client/ps_client_factory.h"
 
 class PsPushOp : public OpKernel {
 public:
