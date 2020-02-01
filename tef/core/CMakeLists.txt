@@ -35,6 +35,7 @@ message(STATUS "cuda_op_objects=${cuda_op_objects}")
 
 set(SOURCE_FILES
     "ops/example_ops.cc"
+    "ops/ps_ops.cc"
     "kernels/zero_out_op.h"
     "kernels/zero_out_op.cc"
     "kernels/example_op.h"

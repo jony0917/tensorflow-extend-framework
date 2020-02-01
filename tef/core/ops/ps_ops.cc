@@ -11,11 +11,11 @@ REGISTER_OP("PsPull")
     .Attr("dtype: type")
     .Output("output: dtype");
 REGISTER_OP("PsPush")
-    .Input("v: dtype")
-    .Attr("var_name: string")
+    .Input("g: float")
+    .Attr("name: string")
+    .Attr("shape: shape")
     .Attr("dtype: type")
     .Attr("updater: string");
-
 
 
 REGISTER_OP("PsSparsePull")
@@ -26,10 +26,11 @@ REGISTER_OP("PsSparsePull")
     .Output("output: dtype");
 REGISTER_OP("PsSparsePush")
     .Input("index: int64")
-    .Input("data: dtype")
+    .Input("g: float")
     .Attr("var_name: string")
     .Attr("shape: shape")
-    .Attr("dtype: type");
+    .Attr("dtype: type")
+    .Attr("updater: string");
 
 
 
@@ -41,7 +42,8 @@ REGISTER_OP("PsHashPull")
     .Output("output: dtype");
 REGISTER_OP("PsHashPush")
     .Input("hash: int64")
-    .Input("v: dtype")
+    .Input("g: float")
     .Attr("var_name: string")
+    .Attr("shape: shape")
     .Attr("dtype: type")
-    .Output("output: dtype");
+    .Attr("updater: string");
