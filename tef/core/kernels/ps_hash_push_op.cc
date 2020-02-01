@@ -9,7 +9,6 @@ public:
    OP_REQUIRES_OK(context, context->GetAttr("var_name", &var_name_));
    OP_REQUIRES_OK(context, context->GetAttr("shape", &shape_));
    OP_REQUIRES_OK(context, context->GetAttr("dtype", &dtype_));
-   OP_REQUIRES_OK(context, context->GetAttr("hash_type", &hash_type_));
    OP_REQUIRES_OK(context, context->GetAttr("updater", &updater_));
 
    ps_client_ = PsClientFactory::Build();
@@ -17,11 +16,7 @@ public:
    var_info.var_name_ = var_name_;
    var_info.shape_ = shape_;
    var_info.dtype_ = dtype_;
-   if(hash_type_ == DT_INT32){
-     var_info.var_type_ = PsClient::VT_HASH32;
-   }else{
-     var_info.var_type_ = PsClient::VT_HASH64;
-   }
+   var_info.var_type_ = PsClient::VT_HASH;
    ps_client_->RegisterVariable(var_info, var_id_);
  }
 
@@ -36,7 +31,6 @@ public:
 private:
   TensorShape shape_;
   DataType dtype_;
-  DataType hash_type_;
   std::string var_name_;
   std::string updater_;
 

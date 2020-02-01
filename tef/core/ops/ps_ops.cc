@@ -19,33 +19,29 @@ REGISTER_OP("PsPush")
 
 
 REGISTER_OP("PsSparsePull")
-    .Input("index: index_type")
+    .Input("index: int64")
     .Attr("var_name: string")
     .Attr("shape: shape")
     .Attr("dtype: type")
-    .Attr("index_type: {int32, int64}")
     .Output("output: dtype");
 REGISTER_OP("PsSparsePush")
-    .Input("index: index_type")
-    .Input("v: dtype")
+    .Input("index: int64")
+    .Input("data: dtype")
     .Attr("var_name: string")
-    .Attr("dtype: type")
-    .Attr("index_type: {int32, int64}");
-
+    .Attr("shape: shape")
+    .Attr("dtype: type");
 
 
 
 REGISTER_OP("PsHashPull")
-    .Input("hash: hash_type")
+    .Input("hash: int64")
     .Attr("var_name: string")
     .Attr("shape: shape")
     .Attr("dtype: type")
-    .Attr("hash_type: {int32, int64}")
     .Output("output: dtype");
 REGISTER_OP("PsHashPush")
-    .Input("hash: hash_type")
+    .Input("hash: int64")
     .Input("v: dtype")
     .Attr("var_name: string")
     .Attr("dtype: type")
-    .Attr("hash_type: {int32, int64}")
     .Output("output: dtype");

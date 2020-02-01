@@ -14,8 +14,7 @@ public:
 
   enum VariableType{
     VT_DENSE = 0,
-    VT_HASH32,
-    VT_HASH64
+    VT_HASH
   };
 
   struct VariableInfo{
@@ -28,8 +27,6 @@ public:
 
 public:
   virtual void RegisterVariable(const VariableInfo& info, int &id) = 0;
-
-  virtual void GetVariableInfo(const std::string& var_name, VariableInfo * var_info) = 0;
 
   virtual void DensePull(int id, Tensor* data) = 0;
 
