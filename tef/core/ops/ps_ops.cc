@@ -15,7 +15,8 @@ REGISTER_OP("PsPush")
     .Attr("name: string")
     .Attr("shape: shape")
     .Attr("dtype: type")
-    .Attr("updater: string");
+    .Attr("updater: string")
+    .Attr("learning_rate: float");
 
 
 REGISTER_OP("PsSparsePull")
@@ -30,7 +31,8 @@ REGISTER_OP("PsSparsePush")
     .Attr("var_name: string")
     .Attr("shape: shape")
     .Attr("dtype: type")
-    .Attr("updater: string");
+    .Attr("updater: string")
+    .Attr("learning_rate: float");
 
 
 
@@ -46,4 +48,5 @@ REGISTER_OP("PsHashPush")
     .Attr("var_name: string")
     .Attr("shape: shape")
     .Attr("dtype: type")
-    .Attr("updater: string");
+    .Attr("updater: string")
+    .Attr("learning_rate: float");

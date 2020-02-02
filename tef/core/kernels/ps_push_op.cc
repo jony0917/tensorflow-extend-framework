@@ -9,6 +9,7 @@ public:
    OP_REQUIRES_OK(context, context->GetAttr("shape", &shape_));
    OP_REQUIRES_OK(context, context->GetAttr("dtype", &dtype_));
    OP_REQUIRES_OK(context, context->GetAttr("updater", &updater_));
+   OP_REQUIRES_OK(context, context->GetAttr("learning_rate", &learning_rate_));
 
    ps_client_ = PsClientFactory::Build();
    PsClient::VariableInfo var_info;
@@ -23,7 +24,7 @@ public:
 public:
  void Compute(OpKernelContext* context) override {
    const Tensor &data = context->input(0);
-   ps_client_->DensePush(var_id_, data, updater_);
+   ps_client_->DensePush(var_id_, data, updater_, learning_rate_);
  }
 
 
@@ -32,6 +33,7 @@ private:
   DataType dtype_;
   string var_name_;
   string updater_;
+  float learning_rate_;
 
   int var_id_;
   PsClient * ps_client_;

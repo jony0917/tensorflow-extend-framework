@@ -32,7 +32,8 @@ public:
 
   virtual void DensePush(int id,
                          const Tensor &data,
-                         const std::string& updater) = 0;
+                         const std::string& updater,
+                         float learning_rate) = 0;
 
   virtual void SparsePull(int id,
                           const Tensor &index,
@@ -41,7 +42,8 @@ public:
   virtual void SparsePush(int id,
                           const Tensor& index,
                           const Tensor& data,
-                          const std::string& updater) = 0;
+                          const std::string& updater,
+                          float learning_rate) = 0;
 
   virtual void HashPull(int id,
                         const Tensor& hash,
@@ -51,7 +53,8 @@ public:
   virtual void HashPush(int id,
                         const Tensor& hash,
                         const Tensor& data,
-                        const std::string& updater) = 0;
+                        const std::string& updater,
+                        float learning_rate) = 0;
 
 };
 

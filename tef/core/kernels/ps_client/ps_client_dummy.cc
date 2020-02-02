@@ -145,23 +145,23 @@ void PsClientDummy::DensePull(int id, Tensor* data) {
 
 void PsClientDummy::DensePush(int id,
                const Tensor &data,
-               const std::string& updater) {
+               const std::string& updater, float learning_rate) {
   CHECK(id < variables_.size());
   CHECK(variable_infos_[id].var_type_ == VT_DENSE);
   CHECK(variables_[id].dense_value_.NumElements() == data.NumElements());
   CHECK(updater == "SGD");
   switch (variable_infos_[id].dtype_){
     case DT_FLOAT:
-      SGDUpdate<float>(0.001, data, &variables_[id].dense_value_);
+      SGDUpdate<float>(learning_rate, data, &variables_[id].dense_value_);
       break;
     case DT_DOUBLE:
-      SGDUpdate<double>(0.001, data, &variables_[id].dense_value_);
+      SGDUpdate<double>(learning_rate, data, &variables_[id].dense_value_);
       break;
     case DT_INT32:
-      SGDUpdate<int>(0.001, data, &variables_[id].dense_value_);
+      SGDUpdate<int>(learning_rate, data, &variables_[id].dense_value_);
       break;
     case DT_INT64:
-      SGDUpdate<int64>(0.001, data, &variables_[id].dense_value_);
+      SGDUpdate<int64>(learning_rate, data, &variables_[id].dense_value_);
       break;
     default:
       break;
@@ -196,22 +196,22 @@ void PsClientDummy::SparsePull(int id,
 void PsClientDummy::SparsePush(int id,
                 const Tensor& index,
                 const Tensor& data,
-                const std::string& updater) {
+                const std::string& updater, float learning_rate) {
   CHECK(id < variables_.size());
   CHECK(variable_infos_[id].var_type_ == VT_DENSE);
   CHECK(updater == "SGD");
   switch (variable_infos_[id].dtype_){
     case DT_FLOAT:
-      SGDUpdateSparse<float>(0.001, index, data, &variables_[id].dense_value_);
+      SGDUpdateSparse<float>(learning_rate, index, data, &variables_[id].dense_value_);
       break;
     case DT_DOUBLE:
-      SGDUpdateSparse<double>(0.001, index, data, &variables_[id].dense_value_);
+      SGDUpdateSparse<double>(learning_rate, index, data, &variables_[id].dense_value_);
       break;
     case DT_INT32:
-      SGDUpdateSparse<int>(0.001, index, data, &variables_[id].dense_value_);
+      SGDUpdateSparse<int>(learning_rate, index, data, &variables_[id].dense_value_);
       break;
     case DT_INT64:
-      SGDUpdateSparse<int64>(0.001, index, data, &variables_[id].dense_value_);
+      SGDUpdateSparse<int64>(learning_rate, index, data, &variables_[id].dense_value_);
       break;
     default:
       break;
@@ -247,22 +247,22 @@ void PsClientDummy::HashPull(int id,
 void PsClientDummy::HashPush(int id,
               const Tensor& hash,
               const Tensor& data,
-              const std::string& updater) {
+              const std::string& updater, float learning_rate) {
   CHECK(id < variables_.size());
   CHECK(variable_infos_[id].var_type_ == VT_HASH);
   CHECK(updater == "SGD");
   switch (variable_infos_[id].dtype_){
     case DT_FLOAT:
-      SGDUpdateHash<float>(0.001, hash, data, &variables_[id].hash_value_);
+      SGDUpdateHash<float>(learning_rate, hash, data, &variables_[id].hash_value_);
       break;
     case DT_DOUBLE:
-      SGDUpdateHash<double>(0.001, hash, data, &variables_[id].hash_value_);
+      SGDUpdateHash<double>(learning_rate, hash, data, &variables_[id].hash_value_);
       break;
     case DT_INT32:
-      SGDUpdateHash<int>(0.001, hash, data, &variables_[id].hash_value_);
+      SGDUpdateHash<int>(learning_rate, hash, data, &variables_[id].hash_value_);
       break;
     case DT_INT64:
-      SGDUpdateHash<int64>(0.001, hash, data, &variables_[id].hash_value_);
+      SGDUpdateHash<int64>(learning_rate, hash, data, &variables_[id].hash_value_);
       break;
     default:
       break;

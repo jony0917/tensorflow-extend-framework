@@ -21,7 +21,8 @@ public:
 
   virtual void DensePush(int id,
                          const Tensor &data,
-                         const std::string& updater) override;
+                         const std::string& updater,
+                         float learning_rate) override;
 
   virtual void SparsePull(int id,
                             const Tensor &index,
@@ -30,7 +31,8 @@ public:
   virtual void SparsePush(int id,
                           const Tensor& index,
                           const Tensor& data,
-                          const std::string& updater) override;
+                          const std::string& updater,
+                          float learning_rate) override;
 
   virtual void HashPull(int id,
                         const Tensor& hash,
@@ -40,7 +42,8 @@ public:
   virtual void HashPush(int id,
                         const Tensor& hash,
                         const Tensor& data,
-                        const std::string& updater) override;
+                        const std::string& updater,
+                        float learning_rate) override;
 
 private:
   std::mutex register_variable_mutex_;
