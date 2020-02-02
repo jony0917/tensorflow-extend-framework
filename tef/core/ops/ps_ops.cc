@@ -10,13 +10,16 @@ REGISTER_OP("PsPull")
     .Attr("shape: shape")
     .Attr("dtype: type")
     .Output("output: dtype");
+
+
 REGISTER_OP("PsPush")
     .Input("g: float")
-    .Attr("name: string")
+    .Attr("var_name: string")
     .Attr("shape: shape")
     .Attr("dtype: type")
     .Attr("updater: string")
     .Attr("learning_rate: float");
+
 
 
 REGISTER_OP("PsSparsePull")
@@ -33,6 +36,7 @@ REGISTER_OP("PsSparsePush")
     .Attr("dtype: type")
     .Attr("updater: string")
     .Attr("learning_rate: float");
+
 
 
 

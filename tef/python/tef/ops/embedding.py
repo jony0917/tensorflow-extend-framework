@@ -5,7 +5,7 @@ import tef.pywrap
 
 
 def embedding(ids, name, shape, dtype, id_type="index"):
-    ids, idx = tf.unqiue(ids)
+    ids, idx = tf.unique(ids)
     if id_type == "index":
         emb = tef.pywrap.ps_sparse_pull(ids, name, shape, dtype)
     elif id_type == "hash":
@@ -18,7 +18,7 @@ def embedding(ids, name, shape, dtype, id_type="index"):
 
 
 def embedding_sparse(sp_ids, sp_weights, name, shape, dtype, id_type="index", combiner="mean"):
-    ids, idx = tf.unqiue(sp_ids.values)
+    ids, idx = tf.unique(sp_ids.values)
     if id_type == "index":
         emb = tef.pywrap.ps_sparse_pull(ids, name, shape, dtype)
     elif id_type == "hash":

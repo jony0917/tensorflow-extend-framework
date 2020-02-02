@@ -1,17 +1,53 @@
 
+import multiprocessing
 import tensorflow as tf
 import tef
+import tef.ops
+
+
+batch_queue = multiprocessing.Queue(maxsize=5000)
+
+def load_data():
+    global batch_queue
+    with open("data.txt") as fp:
+        for line in fp.readlines():
+            columns = line.split(",")
+            assert len(columns) == 6
+
+            kv = {}
+            for i in range(len(columns)):
+                column = columns[i].strip()
+                items = column.split(":")
+                assert len(items) == 2
+                key = items[0]
+                values = items[1].split("|")
+                assert len(values) > 0
+                for k in range(len(values)):
+                    values[k] = int(values[k])
+                kv[key] = values
+
+            print kv
+            batch_queue.put((kv["uid"], kv["age"], kv["interest"], kv["aid"], kv["ad_kw"], kv["label"]))
+
+
+def data_generator():
+    global batch_queue
+    while True:
+        yield batch_queue.get()
+
 
 def data_from_feed():
-    # uid:987, age:20 interest:2|12|234, aid:1912230, ad_kw:car, label:1
-    #
-    #
-    return None, None, None
+    data_set = tf.data.Dataset.from_generator(data_generator, (tf.int64, tf.int64, tf.int64, tf.int64, tf.int64, tf.float32))
+    #data_set = data_set.padded_batch(4, padded_shapes=[None])
+    iterator =  tf.compat.v1.data.make_one_shot_iterator(data_set)
+    return iterator.get_next()
+
 
 def full_connect(input, input_dim, output_dim):
     w = tef.variable([input_dim, output_dim], tf.float)
     b = tef.variable([output_dim], tf.float)
     return tf.sigmoid(tf.matmul(input, w) + b)
+
 
 def dense_to_sparse(dense, missing_element):
     indices = tf.where(tf.not_equal(dense, missing_element))
@@ -19,7 +55,9 @@ def dense_to_sparse(dense, missing_element):
     shape = dense.get_shape()
     return tf.SparseTensor(indices, values, shape)
 
+
 def deep_ctr():
+
     uid, age, interest, aid, ad_kw, label = data_from_feed()
 
     embs = []
@@ -70,6 +108,9 @@ def deep_ctr():
         sess.run(train_op)
 
 
-
 if __name__ == '__main__':
+    data_load_process = multiprocessing.Process(target=load_data)
+    data_load_process.daemon = True
+    data_load_process.start()
+
     deep_ctr()
