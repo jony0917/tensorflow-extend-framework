@@ -3,7 +3,7 @@ import tensorflow as tf
 import tef
 
 def data_from_feed():
-    # uid:987, age:20 interest:car|music|, aid:13423, ad_category:car, label:1
+    # uid:987, age:20 interest:2|12|234, aid:1912230, ad_category:car, label:1
     #
     #
     return None, None, None
