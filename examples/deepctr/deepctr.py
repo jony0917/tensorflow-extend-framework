@@ -3,7 +3,7 @@ import tensorflow as tf
 import tef
 
 def data_from_feed():
-    # uid:987, age:20 interest:2|12|234, aid:1912230, ad_category:car, label:1
+    # uid:987, age:20 interest:2|12|234, aid:1912230, ad_kw:car, label:1
     #
     #
     return None, None, None
@@ -20,7 +20,7 @@ def dense_to_sparse(dense, missing_element):
     return tf.SparseTensor(indices, values, shape)
 
 def deep_ctr():
-    uid, age, interest, aid, ad_category, label = data_from_feed()
+    uid, age, interest, aid, ad_kw, label = data_from_feed()
 
     embs = []
     uid_emb = tef.ops.embedding(uid, "uid", [20], tf.float32, id_type="hash")
@@ -45,18 +45,18 @@ def deep_ctr():
     aid_emb = tef.ops.embedding(aid, "aid", [20], tf.float32, id_type="hash")
     embs.append(aid_emb)
 
-    sp_ad_category = dense_to_sparse(ad_category, 0)
-    sp_ad_category_weight = tf.SparseTensor(sp_ad_category.indices,
-                                            tf.one(sp_ad_category.values.shape),
-                                            sp_ad_category.shape),
-    ad_category_emb = tef.ops.embedding_sparse(sp_ad_category,
-                                               sp_ad_category_weight,
-                                               "ad_category",
+    sp_ad_kw = dense_to_sparse(ad_kw, 0)
+    sp_ad_kw_weight = tf.SparseTensor(sp_ad_kw.indices,
+                                            tf.one(sp_ad_kw.values.shape),
+                                            sp_ad_kw.shape),
+    ad_kw_emb = tef.ops.embedding_sparse(sp_ad_kw,
+                                               sp_ad_kw_weight,
+                                               "ad_kw",
                                                [20],
                                                tf.float32,
                                                id_type="hash",
                                                combiner="mean")
-    embs.append(ad_category_emb)
+    embs.append(ad_kw_emb)
     x = tf.concat(embs)
     x = full_connect(x, 5 * 20, 256)
     x = full_connect(x, 256, 128)
