@@ -112,7 +112,7 @@ PsClientDummy * PsClientDummy::GetInstance(){
 }
 
 void PsClientDummy::RegisterVariable(const VariableInfo& info, int &id) {
-  register_variable_mutex_.lock();
+  variable_mutex_.lock();
   auto it = variable_ids_.find(info.var_name_);
   if(it != variable_ids_.end()){
     id = it->second;
@@ -132,20 +132,23 @@ void PsClientDummy::RegisterVariable(const VariableInfo& info, int &id) {
     variable_infos_.push_back(info);
   }
 
-  register_variable_mutex_.unlock();
+  variable_mutex_.unlock();
 }
 
 void PsClientDummy::DensePull(int id, Tensor* data) {
+  variable_mutex_.lock();
   CHECK(id < variables_.size());
   CHECK(variable_infos_[id].var_type_ == VT_DENSE);
   CHECK(variables_[id].dense_value_.NumElements() == data->NumElements());
 
   tensor::DeepCopy(variables_[id].dense_value_, data);
+  variable_mutex_.unlock();
 }
 
 void PsClientDummy::DensePush(int id,
                const Tensor &data,
                const std::string& updater, float learning_rate) {
+  variable_mutex_.lock();
   CHECK(id < variables_.size());
   CHECK(variable_infos_[id].var_type_ == VT_DENSE);
   CHECK(variables_[id].dense_value_.NumElements() == data.NumElements());
@@ -166,12 +169,15 @@ void PsClientDummy::DensePush(int id,
     default:
       break;
   }
+  variable_mutex_.unlock();
 }
 
 void PsClientDummy::SparsePull(int id,
                 const Tensor &index,
                 Tensor* data) {
+  variable_mutex_.lock();
   CHECK(id < variables_.size());
+  CHECK(variables_.size() == variable_infos_.size());
   CHECK(variable_infos_[id].var_type_ == VT_DENSE);
   switch (variable_infos_[id].dtype_){
     case DT_FLOAT:
@@ -189,6 +195,7 @@ void PsClientDummy::SparsePull(int id,
     default:
       break;
   }
+  variable_mutex_.unlock();
 
 
 }
@@ -197,6 +204,7 @@ void PsClientDummy::SparsePush(int id,
                 const Tensor& index,
                 const Tensor& data,
                 const std::string& updater, float learning_rate) {
+  variable_mutex_.lock();
   CHECK(id < variables_.size());
   CHECK(variable_infos_[id].var_type_ == VT_DENSE);
   CHECK(updater == "SGD");
@@ -216,12 +224,14 @@ void PsClientDummy::SparsePush(int id,
     default:
       break;
   }
+  variable_mutex_.unlock();
 }
 
 
 void PsClientDummy::HashPull(int id,
               const Tensor& hash,
               Tensor* data) {
+  variable_mutex_.lock();
   CHECK(id < variables_.size());
   CHECK(variable_infos_[id].var_type_ == VT_HASH);
   switch (variable_infos_[id].dtype_){
@@ -240,6 +250,7 @@ void PsClientDummy::HashPull(int id,
     default:
       break;
   }
+  variable_mutex_.unlock();
 
 }
 
@@ -248,6 +259,7 @@ void PsClientDummy::HashPush(int id,
               const Tensor& hash,
               const Tensor& data,
               const std::string& updater, float learning_rate) {
+  variable_mutex_.lock();
   CHECK(id < variables_.size());
   CHECK(variable_infos_[id].var_type_ == VT_HASH);
   CHECK(updater == "SGD");
@@ -267,5 +279,6 @@ void PsClientDummy::HashPush(int id,
     default:
       break;
   }
+  variable_mutex_.unlock();
 }
 

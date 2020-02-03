@@ -1,6 +1,7 @@
 
 import tensorflow as tf
 import tef.pywrap
+import tef.utils
 
 
 
@@ -8,8 +9,12 @@ def embedding(ids, name, shape, dtype, id_type="index"):
     ids, idx = tf.unique(ids)
     if id_type == "index":
         emb = tef.pywrap.ps_sparse_pull(ids, name, shape, dtype)
+        tef.utils.add_to_collection(tef.utils.TEF_TRAINABLE_COLLECTION,
+                                    tef.utils.VariableSub(emb, name, shape, dtype, ids, "index"))
     elif id_type == "hash":
         emb = tef.pywrap.ps_hash_pull(ids, name, shape, dtype)
+        tef.utils.add_to_collection(tef.utils.TEF_TRAINABLE_COLLECTION,
+                                    tef.utils.VariableSub(emb, name, shape, dtype, ids, "hash"))
     else:
         assert False
 
@@ -21,8 +26,12 @@ def embedding_sparse(sp_ids, sp_weights, name, shape, dtype, id_type="index", co
     ids, idx = tf.unique(sp_ids.values)
     if id_type == "index":
         emb = tef.pywrap.ps_sparse_pull(ids, name, shape, dtype)
+        tef.utils.add_to_collection(tef.utils.TEF_TRAINABLE_COLLECTION,
+                                    tef.utils.VariableSub(emb, name, shape, dtype, ids, "index"))
     elif id_type == "hash":
         emb = tef.pywrap.ps_hash_pull(ids, name, shape, dtype)
+        tef.utils.add_to_collection(tef.utils.TEF_TRAINABLE_COLLECTION,
+                                    tef.utils.VariableSub(emb, name, shape, dtype, ids, "hash"))
 
     emb = tf.gather(emb, idx)
     emb *= sp_weights.values

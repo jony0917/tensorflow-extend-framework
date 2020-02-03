@@ -46,7 +46,7 @@ public:
                         float learning_rate) override;
 
 private:
-  std::mutex register_variable_mutex_;
+  std::mutex variable_mutex_;
   static std::mutex s_instance_mutex_;
 
   struct Variable{
