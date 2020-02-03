@@ -9,7 +9,6 @@ class Optimizer(object):
         pass
 
 
-
 class GradientDescentOptimizer(Optimizer):
 
     def __init__(self, learning_rate):
@@ -23,7 +22,8 @@ class GradientDescentOptimizer(Optimizer):
         stubs = []
         for stub in tef_trainable:
             gradient = tf.gradients(loss, stub.var)
-            gs.append(gradient)
+            assert len(gradient) == 1
+            gs.append(gradient[0])
             stubs.append(stub)
         return gs, stubs
 
@@ -36,29 +36,37 @@ class GradientDescentOptimizer(Optimizer):
             gradient = gs[i]
             stub = stubs[i]
             if stub.category == "dense":
+                assert isinstance(gradient, tf.Tensor)
                 push_op = tef.pywrap.ps_push(gradient,
                                              stub.name,
                                              stub.shape,
                                              stub.dtype,
                                              "SGD",
                                              self.learning_rate)
-            elif stub.category == "sparse":
-                push_op = tef.pywrap.ps_sparse_push(stub.ids,
-                                                    gradient,
+            elif stub.category == "index":
+                assert isinstance(gradient, tf.IndexedSlices)
+                ids = tf.gather(stub.ids, gradient.indices)
+                push_op = tef.pywrap.ps_sparse_push(ids,
+                                                    gradient.values,
                                                     stub.name,
                                                     stub.shape,
                                                     stub.dtype,
                                                     "SGD",
                                                     self.learning_rate)
             elif stub.category == "hash":
-                push_op = tef.pywrap.ps_hash_push(stub.ids,
-                                                  gradient,
+                assert isinstance(gradient, tf.IndexedSlices)
+                ids = tf.gather(stub.ids, gradient.indices)
+                push_op = tef.pywrap.ps_hash_push(ids,
+                                                  gradient.values,
                                                   stub.name,
                                                   stub.shape,
                                                   stub.dtype,
                                                   "SGD",
                                                   self.learning_rate)
-            push_ops.apped(push_op)
+            else:
+                assert False
+
+            push_ops.append(push_op)
 
         return tf.group(push_ops)
 

@@ -43,14 +43,14 @@ def data_generator():
 def data_from_feed():
     data_set = tf.data.Dataset.from_generator(data_generator, (tf.int64, tf.int64, tf.int64, tf.int64, tf.int64, tf.float32))
     #data_set = data_set.padded_batch(4, padded_shapes=[None])
-    data_set = data_set.batch(4)
+    data_set = data_set.batch(5)
     iterator =  tf.compat.v1.data.make_one_shot_iterator(data_set)
     return iterator.get_next()
 
 
 def full_connect(name, input, input_dim, output_dim):
-    w = tef.ops.variable("%s_w" % name, [input_dim, output_dim], tf.float32)
-    b = tef.ops.variable("%s_b" % name, [output_dim], tf.float32)
+    w = tef.ops.variable("%s_w_%dx%d" % (name, input_dim, output_dim), [input_dim, output_dim], tf.float32)
+    b = tef.ops.variable("%s_b_%d" % (name, output_dim), [output_dim], tf.float32)
     return tf.sigmoid(tf.matmul(input, w) + b)
 
 
@@ -102,22 +102,17 @@ def deep_ctr():
         y = full_connect("fc_3", x, 100, 1)
 
         loss = tf.nn.sigmoid_cross_entropy_with_logits(y, label)
+        loss_mean = tf.reduce_mean(loss)
         sgd_optimizer = tef.training.GradientDescentOptimizer(0.002)
         gs, stubs = sgd_optimizer.gradients(loss)
-        for i in range(len(gs)):
-            print "---------------------------"
-            print gs[i]
-            print "name=%s, category=%s" % (stubs[i].name, stubs[i].category)
+        train_op = sgd_optimizer.apply(gs, stubs)
 
     sess = tf.compat.v1.Session(graph = graph)
     batch = 0
-    while batch < 1:
-        print "batch=%d" % batch
-        print "stubs[0].name=%s" % stubs[1].name
-        #r = sess.run(gs)
-        #print r
+    while batch < 10:
+        loss_value, _ = sess.run([loss_mean, train_op])
+        print "batch=%d, loss=%f" % (batch, loss_value)
         batch += 1
-
 
 if __name__ == '__main__':
     data_load_process = multiprocessing.Process(target=load_data)
