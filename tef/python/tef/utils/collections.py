@@ -18,7 +18,7 @@ def add_to_collection(name, stub):
     global GLOBAL_COLLECTIONS
     if not GLOBAL_COLLECTIONS.has_key(name):
         GLOBAL_COLLECTIONS[name] = []
-    GLOBAL_COLLECTIONS.append(stub)
+    GLOBAL_COLLECTIONS[name].append(stub)
 
 
 

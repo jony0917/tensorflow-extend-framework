@@ -23,7 +23,7 @@ public:
    const Tensor &index = context->input(0);
    Tensor* output_tensor = nullptr;
    OP_REQUIRES_OK(context, context->allocate_output(0, shape_, &output_tensor));
-   ps_client_->SparsePull(var_id_, index, output_tensor);
+   ps_client_->HashPull(var_id_, index, output_tensor);
  }
 
 private:

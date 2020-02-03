@@ -26,7 +26,7 @@ public:
  void Compute(OpKernelContext* context) override {
    const Tensor &index = context->input(0);
    const Tensor &data = context->input(1);
-   ps_client_->SparsePush(var_id_, index, data, updater_, learning_rate_);
+   ps_client_->HashPush(var_id_, index, data, updater_, learning_rate_);
  }
 
 

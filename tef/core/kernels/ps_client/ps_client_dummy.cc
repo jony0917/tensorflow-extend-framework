@@ -178,7 +178,7 @@ void PsClientDummy::SparsePull(int id,
   variable_mutex_.lock();
   CHECK(id < variables_.size());
   CHECK(variables_.size() == variable_infos_.size());
-  CHECK(variable_infos_[id].var_type_ == VT_DENSE);
+  CHECK(variable_infos_[id].var_type_ == VT_DENSE)<<variable_infos_[id].var_type_<<"|"<<variable_infos_[id].var_name_;
   switch (variable_infos_[id].dtype_){
     case DT_FLOAT:
       LookUp<float>(index, variables_[id].dense_value_, data);
