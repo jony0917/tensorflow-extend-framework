@@ -21,8 +21,12 @@ public:
 public:
  void Compute(OpKernelContext* context) override {
    const Tensor &index = context->input(0);
+   CHECK(index.dims() == 1)<<"index.dims="<< index.dims();
+
    Tensor* output_tensor = nullptr;
-   OP_REQUIRES_OK(context, context->allocate_output(0, shape_, &output_tensor));
+   TensorShape output_tensor_shape(index.shape());
+   output_tensor_shape.AppendShape(shape_);
+   OP_REQUIRES_OK(context, context->allocate_output(0, output_tensor_shape, &output_tensor));
    ps_client_->HashPull(var_id_, index, output_tensor);
  }
 

@@ -231,9 +231,13 @@ void PsClientDummy::SparsePush(int id,
 void PsClientDummy::HashPull(int id,
               const Tensor& hash,
               Tensor* data) {
+  std::cout<<" variable_infos_[id].dtype_="<<variable_infos_[id].dtype_
+           <<" variable_infos_[id].var_name_="<<variable_infos_[id].var_name_<<std::endl;
+
   variable_mutex_.lock();
   CHECK(id < variables_.size());
   CHECK(variable_infos_[id].var_type_ == VT_HASH);
+
   switch (variable_infos_[id].dtype_){
     case DT_FLOAT:
       HashLookUp<float>(hash, variable_infos_[id].dtype_, variable_infos_[id].shape_, &variables_[id].hash_value_, data);

@@ -8,6 +8,7 @@ public:
    OP_REQUIRES_OK(context, context->GetAttr("var_name", &var_name_));
    OP_REQUIRES_OK(context, context->GetAttr("shape", &shape_));
    OP_REQUIRES_OK(context, context->GetAttr("dtype", &dtype_));
+   CHECK(shape_.dims() >= 2);
 
    ps_client_ = PsClientFactory::Build();
    PsClient::VariableInfo var_info;
@@ -22,8 +23,14 @@ public:
 public:
  void Compute(OpKernelContext* context) override {
    const Tensor &index = context->input(0);
+   CHECK(index.dims() == 1)<<"index.dims="<< index.dims();
+
    Tensor* output_tensor = nullptr;
-   OP_REQUIRES_OK(context, context->allocate_output(0, shape_, &output_tensor));
+   TensorShape output_tensor_shape(index.shape());
+   for(int i = 1; i < shape_.dims(); i++){
+     output_tensor_shape.AddDim(shape_.dim_size(i));
+   }
+   OP_REQUIRES_OK(context, context->allocate_output(0, output_tensor_shape, &output_tensor));
    ps_client_->SparsePull(var_id_, index, output_tensor);
  }
 
