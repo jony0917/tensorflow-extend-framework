@@ -1,5 +1,6 @@
 
 
+#include <random>
 #include "ps_client_dummy.h"
 #include "tensorflow/core/framework/tensor_util.h"
 
@@ -15,6 +16,17 @@ void ZeroInit(Tensor * target){
 }
 
 template<typename T>
+void RandomInit(Tensor * target){
+  std::default_random_engine generator;
+  std::uniform_int_distribution<int> distribution(-2, 2);
+  auto flat = target->flat<T>();
+  for(int i = 0; i < target->NumElements(); ++i){
+    int dice_roll = distribution(generator);
+    flat(i) = static_cast<T>(dice_roll);
+  }
+}
+
+template<typename T>
 void SGDUpdate(float alpha, const Tensor& gradient, Tensor * target){
   CHECK(target);
   CHECK(gradient.NumElements() == target->NumElements());
@@ -22,7 +34,7 @@ void SGDUpdate(float alpha, const Tensor& gradient, Tensor * target){
   auto target_vec = target->flat<T>();
   auto gradient_vec = gradient.flat<float>();
   for(int i = 0; i < target->NumElements(); i++){
-    target_vec(i) -= alpha * gradient_vec(i);
+    target_vec(i) -= alpha * gradient_vec(i) ;
   }
 }
 
@@ -86,7 +98,7 @@ void HashLookUp(const Tensor& hash, DataType dtype, const TensorShape shape, std
     auto it = param->find(key);
     if(it == param->end()){
       Tensor missing(dtype, shape);
-      ZeroInit<T>(&missing);
+      RandomInit<T>(&missing);
       (*param)[key] = missing;
       auto missing_flat = missing.flat<T>();
       for(int j = 0; j < missing.NumElements(); j++){
@@ -139,16 +151,16 @@ void PsClientDummy::RegisterVariable(const VariableInfo& info, int &id) {
       Tensor New(info.dtype_, info.shape_);
       switch(info.dtype_){
         case DT_FLOAT:
-          ZeroInit<float>(&New);
+          RandomInit<float>(&New);
           break;
         case DT_DOUBLE:
-          ZeroInit<double>(&New);
+          RandomInit<double>(&New);
           break;
         case DT_INT32:
-          ZeroInit<int>(&New);
+          RandomInit<int>(&New);
           break;
         case DT_INT64:
-          ZeroInit<int64>(&New);
+          RandomInit<int64>(&New);
           break;
         default:
           CHECK(false);
