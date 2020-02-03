@@ -5,6 +5,15 @@
 
 
 namespace{
+
+template<typename T>
+void ZeroInit(Tensor * target){
+  auto flat = target->flat<T>();
+  for(int i = 0; i < target->NumElements(); ++i){
+    flat(i) = static_cast<T>(0);
+  }
+}
+
 template<typename T>
 void SGDUpdate(float alpha, const Tensor& gradient, Tensor * target){
   CHECK(target);
@@ -77,6 +86,7 @@ void HashLookUp(const Tensor& hash, DataType dtype, const TensorShape shape, std
     auto it = param->find(key);
     if(it == param->end()){
       Tensor missing(dtype, shape);
+      ZeroInit<T>(&missing);
       (*param)[key] = missing;
       auto missing_flat = missing.flat<T>();
       for(int j = 0; j < missing.NumElements(); j++){
@@ -126,7 +136,24 @@ void PsClientDummy::RegisterVariable(const VariableInfo& info, int &id) {
     variable_ids_[info.var_name_] = id;
     Variable var;
     if(info.var_type_ == VT_DENSE){
-      var.dense_value_ = Tensor(info.dtype_, info.shape_);
+      Tensor New(info.dtype_, info.shape_);
+      switch(info.dtype_){
+        case DT_FLOAT:
+          ZeroInit<float>(&New);
+          break;
+        case DT_DOUBLE:
+          ZeroInit<double>(&New);
+          break;
+        case DT_INT32:
+          ZeroInit<int>(&New);
+          break;
+        case DT_INT64:
+          ZeroInit<int64>(&New);
+          break;
+        default:
+          break;
+      }
+      var.dense_value_ = New;
     }
     variables_.push_back(var);
     variable_infos_.push_back(info);
@@ -175,6 +202,8 @@ void PsClientDummy::DensePush(int id,
 void PsClientDummy::SparsePull(int id,
                 const Tensor &index,
                 Tensor* data) {
+  std::cout<<"SparsePull variable_infos_[id].dtype_="<<variable_infos_[id].dtype_
+             <<" variable_infos_[id].var_name_="<<variable_infos_[id].var_name_<<std::endl;
   variable_mutex_.lock();
   CHECK(id < variables_.size());
   CHECK(variables_.size() == variable_infos_.size());
@@ -231,7 +260,7 @@ void PsClientDummy::SparsePush(int id,
 void PsClientDummy::HashPull(int id,
               const Tensor& hash,
               Tensor* data) {
-  std::cout<<" variable_infos_[id].dtype_="<<variable_infos_[id].dtype_
+  std::cout<<"HashPull variable_infos_[id].dtype_="<<variable_infos_[id].dtype_
            <<" variable_infos_[id].var_name_="<<variable_infos_[id].var_name_<<std::endl;
 
   variable_mutex_.lock();
