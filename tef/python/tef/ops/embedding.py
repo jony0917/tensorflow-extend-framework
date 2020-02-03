@@ -22,7 +22,7 @@ def embedding(ids, name, shape, dtype, id_type="index"):
     return emb
 
 
-def embedding_sparse(sp_ids, sp_weights, name, shape, dtype, id_type="index", combiner="mean"):
+def embedding_sparse(sp_ids, name, shape, dtype, id_type="index", combiner="mean"):
     ids, idx = tf.unique(sp_ids.values)
     if id_type == "index":
         emb = tef.pywrap.ps_sparse_pull(ids, name, shape, dtype)
@@ -34,15 +34,13 @@ def embedding_sparse(sp_ids, sp_weights, name, shape, dtype, id_type="index", co
                                     tef.utils.VariableSub(emb, name, shape, dtype, ids, "hash"))
 
     emb = tf.gather(emb, idx)
-    emb *= sp_weights.values
-
     segment_ids = sp_ids.indices[:, 0]
     if combiner == "sum":
         emb = tf.math.segment_sum(emb, segment_ids)
     elif combiner == "mean":
-        emb = tf.math.segment_sum(emb, segment_ids)
-        weight_sum = tf.math.segment_sum(sp_weights.values, segment_ids)
-        emb = tf.math.divide(emb, weight_sum)
+        emb_sum = tf.math.segment_sum(emb, segment_ids)
+        weight_sum = tf.math.segment_sum(tf.ones(tf.shape(emb)), segment_ids)
+        emb = tf.math.divide(emb_sum, weight_sum)
     else:
         assert False
 

@@ -7,8 +7,8 @@ TEF_TRAINABLE_COLLECTION = "tef_trainable_collection"
 class VariableSub(object):
     def __init__(self, var, var_name, var_shape, dtype, ids=None, category="dense"):
         self.var = var
-        self.var_name = var_name
-        self.var_shape = var_shape
+        self.name = var_name
+        self.shape = var_shape
         self.dtype = dtype
         self.ids = ids
         self.category = category
