@@ -1,6 +1,8 @@
 
 
 #include <random>
+#include <chrono>
+
 #include "ps_client_dummy.h"
 #include "tensorflow/core/framework/tensor_util.h"
 
@@ -17,7 +19,8 @@ void ZeroInit(Tensor * target){
 
 template<typename T>
 void RandomInit(Tensor * target){
-  std::default_random_engine generator;
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  std::default_random_engine generator(seed);
   std::uniform_int_distribution<int> distribution(-2, 2);
   auto flat = target->flat<T>();
   for(int i = 0; i < target->NumElements(); ++i){
