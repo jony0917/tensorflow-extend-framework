@@ -74,6 +74,6 @@ batch=9, loss=0.23234
 参考样例：examples/deepctr/deepctr.py
 
 
-## 对接自定义参数服务器
+## 连接自定义参数服务器
 
 参考样例：tef/core/kernels/ps\_client/ps\_client\_dummy.h
