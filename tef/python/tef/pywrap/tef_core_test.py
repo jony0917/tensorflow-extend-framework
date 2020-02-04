@@ -5,7 +5,7 @@ import tensorflow as tf
 import tef_core
 
 class FMModelWarmerTest(unittest.TestCase):
-    def _test_zero_out(self):
+    def test_zero_out(self):
         @tf.function
         def zero_out(x):
             return tef_core.zero_out(x)

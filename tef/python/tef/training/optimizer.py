@@ -4,19 +4,11 @@ import tef
 import tef.pywrap
 import tef.utils
 
-class Optimizer(object):
+class BaseOptimizer(object):
     def __init__(self):
         pass
 
-
-class GradientDescentOptimizer(Optimizer):
-
-    def __init__(self, learning_rate):
-        super(GradientDescentOptimizer, self).__init__()
-        self.learning_rate = learning_rate
-
-
-    def gradients(self, loss):
+    def compute_gradients(self, loss):
         tef_trainable = tef.utils.get_collection(tef.utils.TEF_TRAINABLE_COLLECTION)
         gs = []
         stubs = []
@@ -27,8 +19,29 @@ class GradientDescentOptimizer(Optimizer):
             stubs.append(stub)
         return gs, stubs
 
+    def apply_gradients(self, gs, stubs):
+        """
+        To be implemented in subclass.
 
-    def apply(self, gs, stubs):
+        :param gs: gradients,  list of tf.Tensor or tf.IndexedSlices object.
+        :param stubs: tef variable stubs
+        :return: train operation
+        """
+
+        assert False
+
+    def minimize(self, loss):
+        gs, stubs = self.compute_gradients(loss)
+        return self.apply_gradients(gs, stubs)
+
+
+class GradientDescentOptimizer(BaseOptimizer):
+
+    def __init__(self, learning_rate):
+        super(GradientDescentOptimizer, self).__init__()
+        self.learning_rate = learning_rate
+
+    def apply_gradients(self, gs, stubs):
         assert len(gs) == len(stubs)
 
         push_ops = []
@@ -70,6 +83,3 @@ class GradientDescentOptimizer(Optimizer):
 
         return tf.group(push_ops)
 
-    def minimize(self, loss):
-        gs, stubs = self.gradients(loss)
-        return self.apply(gs, stubs)

@@ -104,8 +104,8 @@ def deep_ctr():
         loss = tf.nn.sigmoid_cross_entropy_with_logits(y, label)
         loss_mean = tf.reduce_mean(loss)
         sgd_optimizer = tef.training.GradientDescentOptimizer(0.002)
-        gs, stubs = sgd_optimizer.gradients(loss)
-        train_op = sgd_optimizer.apply(gs, stubs)
+        gs, stubs = sgd_optimizer.compute_gradients(loss)
+        train_op = sgd_optimizer.apply_gradients(gs, stubs)
 
     sess = tf.compat.v1.Session(graph = graph)
     batch = 0
