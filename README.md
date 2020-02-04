@@ -10,8 +10,55 @@ TEF通过Operation扩展的机制，将Tensorflow的参数分配与更新任务�
 
 * 通过TEF可以很方便的对接自定义参数服务器
 * 通过TEF可以很方便的实现参数的动态分配和淘汰，以及参数增量导出
-* TEF以单独的python package形式安装部署
+* TEF以单独的Python Package形式安装部署
 
+## 编译与安装
+
+1.构建开发docker镜像
+
+```
+cd docker/develop/
+docker build -t tef_develop .
+```
+
+2.启动docker开发环境
+
+```
+docker run -it --net=host tef_develop
+
+```
+
+2.编译，生成Python Package安装包
+
+```
+git clone https://github.com/jony0917/tensorflow-extend-framework.git
+cd tensorflow-extend-framework
+mkdir build
+cd build
+cmake ..
+make tef
+```
+
+3.pip安装tef
+
+```
+pip install build/tef/python/dist/tf-x.x.x.x-py2-none-any.whl
+```
+
+4.运行example,确认正确安装
+
+```
+cd examples/deepctr
+python deepctr.py
+```
+
+看到类似一下输入，表明安装正确：
+
+```
+...
+batch=9, loss=0.23234
+...
+```
 
 ## 使用指南
 主要API介绍：
@@ -30,4 +77,3 @@ TEF通过Operation扩展的机制，将Tensorflow的参数分配与更新任务�
 ## 对接自定义参数服务器
 
 参考样例：tef/core/kernels/ps\_client/ps\_client\_dummy.h
-
