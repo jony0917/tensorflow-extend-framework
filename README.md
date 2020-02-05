@@ -63,7 +63,13 @@ batch=9, loss=0.23234
 ```
 
 ## 使用指南
-主要API介绍：
+
+1. 通过TEF，你可以通过以下简单两步构建自己的支持高维稀疏数据的场景的深度学习解决方案：
+
+* 首先你需要有自己的参数服务器，或则使用第三方参数服务器，如pslite，ps_plus等
+* 然后为你的参数服务器实现接口 tef/core/kernels/ps\_client.h:PsClient， 参考样例：tef/core/kernels/ps\_client/ps\_client\_dummy.h
+
+2. 主要API介绍：
 
 |方法或类名|功能|
 |---|---|
@@ -75,8 +81,3 @@ batch=9, loss=0.23234
 
 参考样例：examples/deepctr/deepctr.py
 
-
-## 连接自定义参数服务器
-
-
-参考样例：tef/core/kernels/ps\_client/ps\_client\_dummy.h
