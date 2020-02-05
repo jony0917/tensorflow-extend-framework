@@ -81,3 +81,6 @@ batch=9, loss=0.23234
 
 参考样例：examples/deepctr/deepctr.py
 
+## 设计文档
+
+[TensorflowExtendFramework](https://blog.csdn.net/gaofeipaopaotang/article/details/104182284)
